@@ -1,36 +1,26 @@
-let sum_of_digits n =
-     n
-     |> abs
-     |> string
-     |> Seq.map (fun ch -> int ch - int '0')
-     |> Seq.sum
+let sort_strings_by_length (lst: string list) : string list =
+     lst |> List.sortBy String.length
  
-let count_divisors n =
-     let n = abs n
-     [1 .. n] |> List.filter (fun x -> n % x = 0) |> List.length
  
-let sort_b list =
-     list
-     |> List.sortBy (fun x -> (sum_of_digits x, -abs x))
- 
-let sort_c list =
-     list
-     |> List.sortByDescending (fun x -> (count_divisors x, abs x))
- 
-let make_triples a b c =
-     let sortedA = List.sortDescending a
-     let sortedB = sort_b b
-     let sortedC = sort_c c
-     List.zip3 sortedA sortedB sortedC
+let readStringList n =
+     let rec read acc n =
+         match n with
+         | 0 -> acc
+         | _ ->
+             let line = System.Console.ReadLine()
+             read (acc @ [line]) (n - 1)
+     read [] n
 
-let main =  
-    let a = [3; 1; 5]
-    let b = [22; 4; 11]  
-    let c = [10; 5; 6]   
- 
-    let result = make_triples a b c
- 
-    printfn "Результат:"
-    result |> List.iter (fun (x, y, z) -> printfn "(%d, %d, %d)" x y z)
 
+let main =
+     System.Console.Write("Введите количество строк: ")
+     let n = System.Console.ReadLine() |> int
+     System.Console.WriteLine("Введите строки:")
+     let stringList = readStringList n
+ 
+     let sorted = sort_strings_by_length stringList
+ 
+     System.Console.WriteLine("\nОтсортированные строки по длине:")
+     sorted |> List.iter (printfn "%s")
+ 
 main
