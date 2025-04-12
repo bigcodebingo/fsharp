@@ -1,15 +1,27 @@
-let sumOfDigits n =
-    let rec sumCifr n curSum = 
-        if n = 0 then curSum
-        else
-            let n1 = n/10
-            let cifr = n%10
-            let newSum = curSum + cifr
-            sumCifr n1 newSum
-    sumCifr n 0
+//задание 6 - функция в зависимости от bool аргумента
+let getFunction (isSumDigits: bool) =
+     if isSumDigits then
+         
+         let sumDigits n =
+             let rec loop acc num =
+                 match num with
+                 | 0 -> acc
+                 | _ -> loop (acc + num % 10) (num / 10)
+             loop 0 n
+         sumDigits
+     else
+         let rec fibonacci n =
+             match n with
+             | 0 -> 0
+             | 1 -> 1
+             | _ -> fibonacci(n-1) + fibonacci(n-2)
+         fibonacci
 
-let main () = 
-    let sum = sumOfDigits 333
-    printfn "Сумма цифр числа 333: %d" sum
 
-main()
+let sumdigitsfunc = getFunction true
+let sumres = sumdigitsfunc 123
+printfn "%d" sumres
+
+let fibonaccifunc = getFunction false 
+let fibres = fibonaccifunc 10
+printfn "%d" fibres
