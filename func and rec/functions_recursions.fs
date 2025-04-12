@@ -1,27 +1,28 @@
-//задание 6 - функция в зависимости от bool аргумента
-let getFunction (isSumDigits: bool) =
-     if isSumDigits then
-         
-         let sumDigits n =
-             let rec loop acc num =
-                 match num with
-                 | 0 -> acc
-                 | _ -> loop (acc + num % 10) (num / 10)
-             loop 0 n
-         sumDigits
-     else
-         let rec fibonacci n =
-             match n with
-             | 0 -> 0
-             | 1 -> 1
-             | _ -> fibonacci(n-1) + fibonacci(n-2)
-         fibonacci
+//задание 7-8 операции над цифрами числа
+let digitTraversal number operation initial =
+     let rec loop n acc =
+         match n with
+         | 0 -> acc
+         | _ ->
+             let digit = n % 10
+             loop (n / 10) (operation acc digit)
+     loop number initial
+ 
+let testDigitTraversal () =
+     let number = 12345
+     
+     let sum = digitTraversal number (+) 0
+     printfn "Сумма цифр числа %d: %d" number sum
+     
+     let product = digitTraversal number (*) 1
+     printfn "Произведение цифр числа %d: %d" number product
+     
+     let minDigit = digitTraversal number (fun acc x -> min acc x) System.Int32.MaxValue
+     printfn "Минимальная цифра числа %d: %d" number minDigit
+     
+     let maxDigit = digitTraversal number (fun acc x -> max acc x) System.Int32.MinValue
+     printfn "Максимальная цифра числа %d: %d" number maxDigit
 
 
-let sumdigitsfunc = getFunction true
-let sumres = sumdigitsfunc 123
-printfn "%d" sumres
-
-let fibonaccifunc = getFunction false 
-let fibres = fibonaccifunc 10
-printfn "%d" fibres
+testDigitTraversal()
+System.Console.ReadKey() |> ignore
