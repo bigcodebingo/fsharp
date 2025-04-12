@@ -1,11 +1,15 @@
-let rec sumOfDigits n =
-    if n = 0 then 
-        0
-    else 
-        (n%10) + sumOfDigits (n/10)
+let sumOfDigits n =
+    let rec sumCifr n curSum = 
+        if n = 0 then curSum
+        else
+            let n1 = n/10
+            let cifr = n%10
+            let newSum = curSum + cifr
+            sumCifr n1 newSum
+    sumCifr n 0
 
-printf "введите число:"
-let number = System.Console.ReadLine() |> int
+let main () = 
+    let sum = sumOfDigits 333
+    printfn "Сумма цифр числа 333: %d" sum
 
-let sum = sumOfDigits number
-printf "сумма цифр %d равна %d" number sum
+main()
