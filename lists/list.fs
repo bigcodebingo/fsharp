@@ -1,24 +1,14 @@
-let rec readList n = 
-    if n=0 then 
-        []
-    else
-        let Head = System.Convert.ToInt32(System.Console.ReadLine())
-        let Tail = readList (n-1)
-        Head::Tail
-
-let readData = 
-    let n=System.Convert.ToInt32(System.Console.ReadLine())
-    readList n
-
-let rec writeList = function
-    [] ->   let z = System.Console.ReadKey()
-            0
-    | (head : int)::tail -> 
-                       System.Console.WriteLine(head)
-                       writeList tail  
+let rec reduce_list list (f: int->int->int) (condition: int->bool) acc =
+     match list with
+     | [] -> acc
+     | head::tail ->
+         let current = head
+         let newAcc = if condition current then f acc current else acc
+         reduce_list tail f condition newAcc
 
 
-[<EntryPoint>]
-let main argv = 
-    let l = readData
-    writeList l
+let main = 
+    let sumEven = reduce_list [1;2;3;4;5;6] (+) (fun x -> x % 2 = 0) 0
+    System.Console.WriteLine("Сумма четных: {0}", sumEven)
+
+main
