@@ -1,24 +1,26 @@
-//задание 9-10 обход числа с условием
-let conditionalDigitTraversal number operation initial condition =
-     let rec loop n acc =
-         match n with
-         | 0 -> acc
-         | _ ->
-             let digit = n % 10
-             let newAcc = 
-                 match condition digit with
-                 | true -> operation acc digit
-                 | false -> acc
-             loop (n / 10) newAcc
-     loop number initial
+//задание 11
+let reactToLanguage language =
+     match language with
+     | "F#" | "Prolog" -> "Ты — подлиза!"
+     | "Python" -> "Банально"
+     | "Java" -> "ооп..."
+     | "C++" -> "1 курс)"
+     | _ -> "Хороший вкус!"
 
-let testConditionalDigitTraversal () =
-     let number = 123456789
-     let sumEven = conditionalDigitTraversal number (+) 0 (fun x -> x % 2 = 0)
-     printfn "сумма четных цифр числа %d: %d" number sumEven
-     let productGreaterThan5 = conditionalDigitTraversal number (*) 1 (fun x -> x > 5)
-     printfn "произведение цифр числа %d больше 5: %d" number productGreaterThan5
-     let maxOdd = conditionalDigitTraversal number max System.Int32.MinValue (fun x -> x % 2 <> 0)
-     printfn "максимальная нечетная цифра числа %d: %d" number maxOdd
+//задание 12
+let mainSuperposition () =
+     let readInput () = System.Console.ReadLine()
+     let processInput = readInput >> reactToLanguage
+     printfn "Введите ваш любимый язык:"
+     processInput () |> printfn "%s"
+ 
+let mainCurrying () =
+     let readAndReact reactFunc =
+         printfn "Введите ваш любимый язык:"
+         System.Console.ReadLine() |> reactFunc |> printfn "%s"
+     readAndReact reactToLanguage
 
-testConditionalDigitTraversal()
+
+printf "%s" (reactToLanguage "Java")
+mainSuperposition() 
+mainCurrying()
