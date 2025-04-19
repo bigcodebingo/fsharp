@@ -1,37 +1,34 @@
-open FParsec
+open System
 
-type Expr =
-    | Num of int
-    | Add of Expr * Expr
-    | Sub of Expr * Expr
+type Message =
+    | PrintMessage of string    
+    | DoubleNumber of int       
+    | Stop                      
 
-let numParser: Parser<Expr, unit> =
-    pint32 |>> fun n -> Num n
+let agent = MailboxProcessor.Start(fun inbox ->
+    let rec loop () =
+        async {
+            let! msg = inbox.Receive()
 
-let addParser: Parser<Expr, unit> =
-    (spaces >>. numParser .>> spaces) .>>. (pchar '+' .>> spaces) .>>. (spaces >>. numParser)
-    |>> fun ((left, _), right) -> Add (left, right)
+            match msg with
+            | PrintMessage text ->
+                printfn "Получено сообщение: %s" text
+                return! loop ()
 
-let subParser: Parser<Expr, unit> =
-    (spaces >>. numParser .>> spaces) .>>. (pchar '-' .>> spaces) .>>. (spaces >>. numParser)
-    |>> fun ((left, _), right) -> Sub (left, right)
+            | DoubleNumber num ->
+                printfn "Число удвоено: %d" (num * 2)
+                return! loop ()
 
-let exprParser: Parser<Expr, unit> =
-    addParser <|> subParser <|> numParser
+            | Stop ->
+                printfn "Агент завершает работу."
+                return ()
+        }
+    loop ()
+)
 
-let parseExpression (input: string) =
-    match run exprParser input with
-    | Success(result, _, _) -> Some result
-    | Failure(msg, _, _) -> None
+agent.Post(PrintMessage "Hello, world!")  
+agent.Post(DoubleNumber 5)                 
+agent.Post(DoubleNumber 10)               
+agent.Post(Stop)                          
 
-let input1 = "3 + 4"
-let input2 = "10 - 3"
-let input3 = "5"
-
-let result1 = parseExpression input1
-let result2 = parseExpression input2
-let result3 = parseExpression input3
-
-printfn "Результат 1: %A" result1
-printfn "Результат 2: %A" result2
-printfn "Результат 3: %A" result3
+Console.ReadLine() |> ignore
