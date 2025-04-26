@@ -22,7 +22,7 @@ high(asm,0).
 high(java,1).
 high(javascript,1).
 high(php, 1).
-high(swift, 1)
+high(swift,1)
 
 decl(ruby,0).
 decl(c_sharp,0).
