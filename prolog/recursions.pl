@@ -137,6 +137,7 @@ max_not_div3_down(N, CurrentMax, Max):-
     max_not_div3_down(Next, NewMax, Max).
 
 
+/*
 divisors_count_up(N, Count):-
     N > 0,
     count_divisors_up(N, N, Count).
@@ -169,5 +170,33 @@ count_divisors_down(N, D, Acc, Count) :-
     ),
     NextD is D - 1,
     count_divisors_down(N, NextD, NewAcc, Count).
+*/
+
+find_decreasing_indices(List, Indices) :-
+    add_indices(List, 0, Indexed),
+    predsort(compare_pairs, Indexed, Sorted),
+    extract_indices(Sorted, Indices).
+
+
+compare_pairs(Order, [V1,_], [V2,_]) :-
+    compare(Order, V2, V1).  
+
+add_indices([], _, []).
+add_indices([H|T], I, [[H,I]|Rest]) :-
+    NextI is I + 1,
+    add_indices(T, NextI, Rest).
+
+
+extract_indices([], []).
+extract_indices([[_,I]|T], [I|Rest]) :-
+    extract_indices(T, Rest).
+
+
+print_indices(Indices) :-
+    write('Indices: '),
+    write(Indices),
+    nl.
+
+
 
 
